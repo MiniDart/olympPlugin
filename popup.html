@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>You can improve your cash acquiring experience</title>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <script src="jquery.js"></script>
+    <script src="popup.js"></script>
+</head>
+<body>
+<div class="container">
+<div class="button button_start" id="start">Старт</div>
+    <div class="button button_stop" id="stop">Стоп</div>
+</div>
+<h1>Настройки</h1>
+<div class="container">
+    <div class="setting money">
+        <h2>Деньги</h2>
+        <table>
+            <tr><td>Максимальный ущерб:</td><td><input id="max_damage" type="text" size="7"></td></tr>
+            <tr><td>Максимальный выйгрыш:</td><td><input id="max_profit" type="text" size="7"></td></tr>
+        </table>
+    </div>
+    <div class="setting time">
+        <h2>Алгоритм</h2>
+        <p><label><input type="radio" name="algorithm" value="hard_chase"></label>Жёсткий догон</p>
+    </div>
+</div>
+<div class="big_button" id="apply">Применить</div>
+</body>
+</html>

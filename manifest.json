@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "Olymp trade manager",
+  "description": "You can be reach with this extension",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "https://olymptrade.com/*",
+    "*://localhost/*",
+    "activeTab",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://olymptrade.com/ru-ru/platform"],
+      "js": ["jquery.js", "manage.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "scripts":
+    ["jquery.js", "communication.js"],
+    "pages": ["background.html"]
+  }
+
+}

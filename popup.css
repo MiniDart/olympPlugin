@@ -1,0 +1,67 @@
+html {
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+body{
+    margin-top: 0;
+    width: 600px;
+    background-color: #d0d0d0;
+}
+.container{
+    display: flex;
+}
+.big_button{
+    margin-top: 8px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    border: 1px solid #7d81ff;
+    cursor: pointer;
+    text-align: center;
+}
+.button{
+    height: 30px;
+    line-height: 30px;
+    font-size: 25px;
+    border: 1px solid #7d81ff;
+    cursor: pointer;
+    text-align: center;
+    flex-grow: 1;
+}
+.button:hover{
+    background-color: #7d81ff;
+    color: white;
+}
+.big_button:hover{
+    background-color: #7d81ff;
+    color: white;
+}
+.button_start{
+    margin-right: 5px;
+}
+.button_stop{
+    margin-left: 5px;
+}
+h1{
+    font-size: 18px;
+    text-align: center;
+}
+h2{
+    font-size: 15px;
+    text-align: center;
+}
+.setting{
+    flex-grow: 1;
+    border: 1px solid #7d81ff;
+    padding-bottom: 10px;
+}
+.money{
+    margin-right: 5px;
+    width: 120px;
+    padding-right: 5px;
+}
+.time{
+    margin-left: 5px;
+}
