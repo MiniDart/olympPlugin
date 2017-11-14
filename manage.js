@@ -38,18 +38,7 @@ function initialization() {
 
 function start(request) {
     if (!isReady) return {result:"error",message:"try later"};
-    algorithmManager.time=1000*60*(+inputMinutes.val())+1000*60*60*(+inputHours.val())+3000;
-    algorithmManager.previous_money=getDigitsFromString(curMoney.text());
-    algorithmManager.algorithm=request.algorithm;
-    algorithmManager.bet=getDigitsFromString(inputAmount.val());
-    algorithmManager.min=getDigitsFromString(curMoney.text())-request.max_damage*100;
-    algorithmManager.max=getDigitsFromString(curMoney.text())+request.max_profit*100;
-    algorithmManager.isStopped=false;
-    algorithmManager.isError=false;
-    algorithmManager.isFirstTime=true;
-    algorithmManager.data={};
-    algorithmManager.initial_money=getDigitsFromString(curMoney.text());
-    algorithmManager.hard_chase=hard_chase.initialization(algorithmManager);
+    algorithmManager.initialization(request);
     algorithmManager.manage(algorithmManager);
     isStarted=true;
     console.log("СТАРТ");
@@ -62,6 +51,7 @@ function stop(request) {
     if (isStarted){
         algorithmManager.isStopped=true;
         isStarted=false;
+        clearTimeout(timerId);
         return {result:"success"};
     }
     return {result:"error",message:"Algorithm isn't started"}
@@ -82,9 +72,48 @@ function commandHandler(request,sender,sendResponse) {
 }
 
 
+var appManager={
+    initialization:function (request) {
+
+  },
+    start:function (self) {
+        if (self.isError||getDigitsFromString(curMoney.text())<self.min||getDigitsFromString(curMoney.text())>self.max||self.isStopped||self.bet!=getDigitsFromString(inputAmount.val())){
+            clearTimeout(timerId);
+            isStarted=false;
+            if (getDigitsFromString(curMoney.text())<self.min){
+                console.log("Ты ушёл в минус, лошара");
+                console.log("Ты просрал "+(self.initial_money-getDigitsFromString(curMoney.text()))/100+" рублей");
+            }
+            if (getDigitsFromString(curMoney.text())>self.max){
+                console.log("Тебе повезло, можешь сегодня гульнуть");
+                console.log("Комп заработал тебе "+(getDigitsFromString(curMoney.text())-self.initial_money)/100+" рублей");
+            }
+            if (self.isStopped){
+                console.log("Ты нажал на стоп");
+                console.log("И заработал "+(getDigitsFromString(curMoney.text())-self.initial_money)/100+" рублей");
+            }
+            if (self.bet!=getDigitsFromString(inputAmount.val())){
+                console.log("Остановлено!");
+                console.log("Ошибка обработки ставки")
+            }
+            if (self.isError){
+                console.log("Остановлено!");
+                console.log("Случилась не предвиденная ошибка")
+            }
+            console.log("СТОП");
+            console.log("--------------------------------------------------")
+        }
+        else {
+            self[self.algorithm]();
+            self.isFirstTime=false;
+            timerId=setTimeout(self.manage,self.time,self);
+        }
+    },
+};
 
 
 var algorithmManager={
+    probability:0.5,
     isFirstTime:true,
     isError:false,
     moveButton:"R",
@@ -97,41 +126,23 @@ var algorithmManager={
     time:0,
     algorithm:"",
     data:{},
-    manage:function (self) {
-       if (self.isError||getDigitsFromString(curMoney.text())<self.min||getDigitsFromString(curMoney.text())>self.max||self.isStopped||self.bet!=getDigitsFromString(inputAmount.val())){
-           clearTimeout(timerId);
-           isStarted=false;
-           if (getDigitsFromString(curMoney.text())<self.min){
-               console.log("Ты ушёл в минус, лошара");
-               console.log("Ты просрал "+(self.initial_money-getDigitsFromString(curMoney.text()))/100+" рублей");
-           }
-           if (getDigitsFromString(curMoney.text())>self.max){
-               console.log("Тебе повезло, можешь сегодня гульнуть");
-               console.log("Комп заработал тебе "+(getDigitsFromString(curMoney.text())-self.initial_money)/100+" рублей");
-           }
-           if (self.isStopped){
-               console.log("Ты нажал на стоп");
-               console.log("И заработал "+(getDigitsFromString(curMoney.text())-self.initial_money)/100+" рублей");
-           }
-           if (self.bet!=getDigitsFromString(inputAmount.val())){
-               console.log("Остановлено!");
-               console.log("Ошибка обработки ставки")
-           }
-           if (self.isError){
-               console.log("Остановлено!");
-               console.log("Случилась не предвиденная ошибка")
-           }
-           console.log("СТОП");
-           console.log("--------------------------------------------------")
-       }
-       else {
-           self[self.algorithm]();
-           self.isFirstTime=false;
-           timerId=setTimeout(self.manage,self.time,self);
-       }
+    initialization:function (request) {
+        this.time=1000*60*(+inputMinutes.val())+1000*60*60*(+inputHours.val())+3000;
+        this.previous_money=getDigitsFromString(curMoney.text());
+        this.algorithm=request.algorithm;
+        this.bet=getDigitsFromString(inputAmount.val());
+        this.min=getDigitsFromString(curMoney.text())-request.max_damage*100;
+        this.max=getDigitsFromString(curMoney.text())+request.max_profit*100;
+        this.isStopped=false;
+        this.isError=false;
+        this.isFirstTime=true;
+        this.data={};
+        this.initial_money=getDigitsFromString(curMoney.text());
+        this.probability=0.5;
+        this.hard_chase=hard_chase.initialization(this);
     },
-    random_move:function () {
-      if (Math.random()>0.5) buttonUp.click();
+    probable_move:function () {
+      if (Math.random()>=this.probability) buttonUp.click();
       else buttonDown.click();
     },
     up_move:function () {
@@ -142,8 +153,8 @@ var algorithmManager={
     },
     move:function () {
         switch (this.moveButton){
-            case "R":
-                this.random_move();
+            case "P":
+                this.probable_move();
                 break;
             case "U":
                 this.up_move();
@@ -174,6 +185,17 @@ function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+
+var statisticsManager={
+    curStat:null,
+    setInstance:function (stat) {
+      this.curStat=this[stat];
+  },
+    prepare:function () {
+      this.curStat.prepare();
+    },
+    simpleStat:simpleStat,
+};
 
 chrome.runtime.onMessage.addListener(commandHandler);
 
@@ -210,3 +232,15 @@ var hard_chase={
       }
   }
 };
+
+
+
+
+//---------------------STATISTICS--------------------------------------
+
+var simpleStat= {
+        prepare: function () {
+
+        }
+    }
+;
