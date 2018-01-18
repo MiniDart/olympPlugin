@@ -14,16 +14,24 @@
 </div>
 <h1>Настройки</h1>
 <div class="container">
-    <div class="setting money">
-        <h2>Деньги</h2>
+    <div class="setting common">
+        <h2>Общие настройки</h2>
         <table>
             <tr><td>Максимальный ущерб:</td><td><input id="max_damage" type="text" size="7"></td></tr>
             <tr><td>Максимальный выйгрыш:</td><td><input id="max_profit" type="text" size="7"></td></tr>
         </table>
     </div>
-    <div class="setting time">
+    <div class="setting algorithm">
         <h2>Алгоритм</h2>
-        <p><label><input type="radio" name="algorithm" value="hard_chase"></label>Жёсткий догон</p>
+        <p><label><input type="radio" name="algorithm" value="hard_chase">Жёсткий догон</label></p>
+    </div>
+    <div class="setting bet_button_choice">
+        <h2>Выбор ставки</h2>
+        <p><label><input type="radio" name="bet_button_choice" value="up">Всегда на повышение</label></p>
+        <p><label><input type="radio" name="bet_button_choice" value="down">Всегда на понижение</label></p>
+        <p><label><input type="radio" name="bet_button_choice" value="random" checked>Случайно</label></p>
+        <p><label><input type="radio" name="bet_button_choice" value="recent_bets">В зависимости от последних ставок</label></p>
+        <p class="hidden">Количество учитываемых ставок:<input id="count_of_bets" type="text" size="4"></p>
     </div>
 </div>
 <div class="big_button" id="apply">Применить</div>

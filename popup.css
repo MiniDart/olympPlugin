@@ -56,12 +56,15 @@ h2{
     flex-grow: 1;
     border: 1px solid #7d81ff;
     padding-bottom: 10px;
+    flex-basis:120px;
 }
-.money{
+.common{
     margin-right: 5px;
-    width: 120px;
     padding-right: 5px;
 }
-.time{
+.algorithm{
     margin-left: 5px;
+}
+.hidden{
+    display: none;
 }

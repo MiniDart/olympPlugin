@@ -20,7 +20,8 @@ function ready() {
     stopButton.on("click",stop);
     $("#apply").on("click",save);
     $("body").append(hideElement);
-    chrome.storage.sync.get(["algorithm","max_damage","max_profit"],function (items) {
+    chrome.storage.sync.get(["algorithm","common","bet_button_choice"],function (items) {
+        if (!items["algorithm"])
         var alg=items["algorithm"]?items["algorithm"]:"hard_chase";
         $("[name=algorithm][value="+alg+"]").prop("checked",true);
         $("#max_damage").val(items["max_damage"]?items["max_damage"]:"2000");
@@ -102,6 +103,48 @@ function sendMessage(command,callback) {
         chrome.tabs.sendMessage(tabs[0].id, objToSend, callback);
     });
 }
+
+
+
+var storage={
+  algorithm:null,
+  common:null,
+  bet_button_choice:null,
+  save:function () {
+      let obj={};
+      obj.algorithm=this.getAlgorithmSettings();
+      obj.common=this.getCommonSettings();
+      obj.bet_button_choice=this.getBetButtonChoice();
+      chrome.storage.sync.set({
+          settings:obj
+      });
+  },
+    get:function () {//-------------------------------------here !!!!!!!!!!!!!!!
+
+    }
+    ,
+  getBetButtonChoice:function () {
+      let obj={};
+      obj.name=$("[name=bet_button_choice]:checked").attr("value");
+      return obj;
+  },
+    getCommonSettings:function () {
+        let obj={};
+        obj.max_damage=$("#max_damage").val();
+        obj.max_profit=$("#max_profit").val();
+        return obj;
+    },
+    getAlgorithmSettings:function () {
+        let obj={};
+        obj.name=$("[name=algorithm]:checked").attr("value");
+        switch (obj.name){
+            case "recent_bets":
+                obj.count=$("#count_of_bets").val();
+                break;
+        }
+        return obj;
+    }
+};
 
 
 window.addEventListener("load",ready);
